@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ChatController extends Controller{
 
-    private string $chatbotFile = 'storage/app/chat.json';
+    private string $chatbotFile = 'chat.json';
 
     public function index(): JsonResponse{
 
@@ -33,17 +33,18 @@ class ChatController extends Controller{
     }
 
     private function readChatbotFile(): array{
-        if(!file_exists($this->chatbotFile)){
+        $path = storage_path('app/' . $this->chatbotFile);
+        if(!file_exists($path)){
             return [];
         }
 
-        $content = file_get_contents($this->chatbotFile);
+        $content = file_get_contents($path);
         return json_decode($content, true) ?? [];
     }
 
     private function writeChatbotFile(array $chat): void{
 
-        $path = storage_path($this->chatbotFile);
+        $path = storage_path('app/' . $this->chatbotFile);
 
         file_put_contents($path, json_encode($chat, JSON_PRETTY_PRINT));
     }
