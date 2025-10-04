@@ -26,9 +26,11 @@ class Chatbot extends Command
      */
     public function handle()
     {
-        //aqui va la lógica del chatbot
-        //Idea de usar la interacción Q&A por teclado numérico.
-        //Primero hay que cargar el JSON de Q&A...
+        if(!Storage::exists('chat.json')){
+            $this->error("El fitxer chat.json no existeix.");
+            return Command::FAILURE;
+        }
+
         $chat = json_decode(Storage::get('chat.json'), true);
 
         if(!is_array($chat) || empty($chat)){
