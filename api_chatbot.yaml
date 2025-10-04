@@ -1,0 +1,139 @@
+openapi: 3.0.3
+info:
+  title: API Chatbot Onboarding
+  description: API REST per enviament Q&A mitjançant un chatbot per terminal.
+  version: 1.0.0
+  contact:
+    name: Marc Sanchez Sierra
+    email: mks4nch3z@gmail.com
+  
+  servers:
+    - url: http://localhost:8000/api
+  description: Servidor local de php
+
+  paths:
+    /chat:
+      get:
+        summary: Obtenir totes les preguntes i respostes del chatbot.
+        description: Retorna totes les entrades Q&A.
+        tags:
+          - Q&A Chatbot
+        responses:
+          '200':
+            description: Llista de Q&A recuperada.
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ChatEntry'
+                example: 
+                  - question: "Què és Laravel?"
+                    answer: "Laravel es un framework de PHP"
+                  - question: "Com es crea una ruta en Laravel?"
+                    answer: "S'utilitza el fitxer web.php per definir rutes."
+          '500':
+            description: Error intern del servidor.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+      post:
+        summary: Afegir una nova pregunta i resposta al chatbot.
+        description: Permet afegir una nova pregunta i resposta al chatbot.
+        tags:
+          - Q&A Chatbot
+        requestBody:
+          required: true
+          conrent:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewChatEntry'
+              example:
+                - question: "Que vol dir les sigles API?"
+                  answer: "API vol dir Application Programming Interface"
+        responses:
+          '201':
+            description: Entrada creada correctament.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/SuccessMessage'
+          '422':
+            description: Error de validació.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ValidationError'
+          '550':
+            description: Error intern del servidor.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
+  components:
+    schemas:
+      ChatEntry:
+        type: object
+        required:
+          - question
+          - answer
+        properties:
+          question:
+            type: string
+            description: La pregunta feta per l'usuari.
+          answer:
+            type: string
+            description: La resposta proporcionada pel chatbot.
+
+      NewChatEntry:
+        type: object
+        properties:
+        required:
+          - question
+          - answer
+        question:
+            type: string
+            description: La nova pregunta a afegir.
+        answer:
+            type: string
+            description: Resposta corresponent.
+
+
+      SuccessMessage:
+        type: object
+        properties:
+          message:
+            type: string
+            description: Missatge d'èxit.
+        example:
+          message: "Entrada creada correctament."
+
+      ValidationError:
+        type: object
+        properties:
+          errors:
+            type: array
+            items:
+              type: string
+            description: Llista d'errors de validació.
+        example:
+          errors:
+            question: ["La pregunta és obligatòria."]
+            answer: ["La resposta és obligatòria."]
+
+      Error:
+        type: object
+        properties:
+          error:
+            type: string
+            description: Missatge d'error.
+        example:
+          error: "Error intern del servidor."
+tags:
+  - name: Q&A Chatbot
+    description: Operacions de gestió de preguntes i respostes amb el chatbot.
+          
+
