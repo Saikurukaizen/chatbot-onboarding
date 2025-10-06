@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use Illuminate\Container\Attributes\Storage as AttributesStorage;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,6 +17,34 @@ class ChatbotJsonTest extends TestCase{
              'answer' => 'Laravel es un framework de PHP'
             ]
         ], JSON_PRETTY_PRINT));
+    }
+
+    public function it_exists_json_file(): void{
+        $this->assertTrue(Storage::disk('local')->exists($this->chatbotFile));
+    }
+
+    public function it_can_read_json_file(): void{
+        $content = Storage::disk('local')->get($this->chatbotFile);
+        $this->assertJson($content);
+    }
+
+    public function it_returns_correct_answer(): void{
+        $content = Storage::disk('local')->get($this->chatbotFile);
+        $data = json_decode($content, true);
+        $this->assertTrue(isset($data[0]['question']) && isset($data[0]['answer']));
+        $this->assertFalse(empty($data[0]['question']) || empty($data[0]['answer']));
+
+        $this->assertFalse($data[0]['question'] === $data[0]['answer']);
+
+    }
+
+    public function it_question_and_answer_are_different(): void{
+        $content = Storage::disk('local')->get($this->chatbotFile);
+        $data = json_decode($content, true);
+
+        foreach($data as $entry){
+            $this->assertFalse($entry['question'] === $entry['answer']);
+        }
     }
 }
 
