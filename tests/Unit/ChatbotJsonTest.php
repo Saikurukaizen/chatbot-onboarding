@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use Illuminate\Container\Attributes\Storage as AttributesStorage;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Storage;
 
@@ -19,15 +18,18 @@ class ChatbotJsonTest extends TestCase{
         ], JSON_PRETTY_PRINT));
     }
 
+    /** @test */
     public function it_exists_json_file(): void{
         $this->assertTrue(Storage::disk('local')->exists($this->chatbotFile));
     }
 
+    /** @test */
     public function it_can_read_json_file(): void{
         $content = Storage::disk('local')->get($this->chatbotFile);
         $this->assertJson($content);
     }
 
+    /** @test */
     public function it_returns_correct_answer(): void{
         $content = Storage::disk('local')->get($this->chatbotFile);
         $data = json_decode($content, true);
@@ -38,6 +40,7 @@ class ChatbotJsonTest extends TestCase{
 
     }
 
+    /** @test */
     public function it_question_and_answer_are_different(): void{
         $content = Storage::disk('local')->get($this->chatbotFile);
         $data = json_decode($content, true);
