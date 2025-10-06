@@ -46,16 +46,45 @@ class ChatApiTest extends TestCase{
         ]);
 
         $response->assertJsonCount(2);
-/* 
-        $response->assertJsonFragment([
-            'question' => 'Què és Laravel?',
-            'answer' => 'Laravel es un framework de PHP'
-        ]);
+    }
 
-        $response->assertJsonFragment([
-            'question' => 'Com instal·lar Laravel?',
-            'answer' => 'Pots instal·lar Laravel mitjançant Composer'
-        ]); */
+    /** @test */
+    public function it_stores_new_chat_entry(): void{
+        $newEntry = [
+            'question' => 'Què és PHP?',
+            'answer' => 'PHP es una llenguatge de programació web'
+        ];
+
+        $response = $this->postJson('/api/chat', $newEntry);
+
+        $response->assertStatus(201);
+        $response->assertJson([
+            'message' => 'Chat entry saved successfully'
+        ]);
+    }
+
+    /** @test */
+    public function it_validates_required_fields(): void{
+        $invalidData = ['question' => ''];
+
+        $response = $this->postJson('/api/chat', $invalidData);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['question', 'answer']);
+    }
+
+    /** @test  */
+    public function it_creates_a_new_entry(): void{
+        $newEntry = [
+            'question' => 'Amb quin nom es coneix les dependències de PHP?',
+            'answer' => 'Es coneix com a Composer'
+        ];
+
+        $response = $this->postJson('/api/chat', $newEntry);
+        $response->assertStatus(201);
+        $response->assertJson([
+            'message' => 'Chat entry saved successfully'
+        ]);
     }
 }
 
