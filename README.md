@@ -8,7 +8,7 @@ Desenvolupat per Marc Sanchez Sierra
 ## 📄 Descripció
 API REST basat en un sistema de chatbot per terminal que gestiona preguntes y respostes
 
-## 🎯 Palabras Clave
+## 🎯 Paraules Clau
 - API REST
 - Endpoints
 - Chatbot
@@ -16,7 +16,7 @@ API REST basat en un sistema de chatbot per terminal que gestiona preguntes y re
 - Console Command
 - Yaml
 
-## 🛠️ Tecnologías utilizadas
+## 🛠️ Tecnologíes utilitzades
 - XAMPP o servidor local de PHP
 - PHP ^8.1
 - Composer ^2.0
@@ -24,7 +24,7 @@ API REST basat en un sistema de chatbot per terminal que gestiona preguntes y re
 - IDE: Visual Studio Code
 - Git & GitHub
 
-## 📋 Requisitos
+## 📋 Requisits
 - Servidor local tipus Laragon, XAMPP / MAMP / LAMP para la compilació de PHP.
 En el cas d'un servidor de PHP pots executar-ho amb:
 
@@ -34,7 +34,7 @@ php artisan serve
 
 ```
 
-## 🛠️ Instalación
+## 🛠️ Instalació
 1. Clona el repositori i entra a la carpeta del projecte:
 
 ```bash
@@ -141,6 +141,3 @@ Els tests cobreixen la lectura del fitxer JSON, validació de l'estructura de da
 
 La documentació API està en format .yaml pel format Swagger/OpenAPI
 
-## 🌐 Despliegue
-- PHP installed on your development environment (PHP 7.4+ recommended, PHP 8.1.10 used)
-- A local server like XAMPP, MAMP, or LAMP to run PHP scripts
