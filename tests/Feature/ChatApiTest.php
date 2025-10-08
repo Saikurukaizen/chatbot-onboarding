@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Controllers\ChatController;
 use Tests\TestCase;
 use Illuminate\Support\Facades\File;
 
@@ -12,7 +13,7 @@ class ChatApiTest extends TestCase{
     protected function setUp(): void{
         parent::setUp();
 
-        $this->testFilePath = storage_path('app/chat.json');
+        $this->testFilePath = storage_path('app/chat_test.json');
 
         $testData = [
             ['question' => 'Què és Laravel?',
@@ -27,16 +28,19 @@ class ChatApiTest extends TestCase{
     }
 
     protected function tearDown(): void{
-        if(File::exists($this->testFilePath)){
-            File::delete($this->testFilePath);
-        }
-
         parent::tearDown();
     }
 
     /** @test */
     public function it_returns_all_chat_entries(): void{
-        $this->assertTrue(File::exists($this->testFilePath), "El fitxer chat.json no existeix.");
+        $this->assertTrue(File::exists($this->testFilePath), "El fitxer chat_test.json no existeix.");
+
+        // Configurar el controlador para usar archivo de test
+        $this->app->instance(ChatController::class, 
+            tap(new ChatController(), function($controller) {
+                $controller->setChatbotFile('chat_test.json');
+            })
+        );
 
         $response = $this->getJson('/api/chat');
 
@@ -50,6 +54,12 @@ class ChatApiTest extends TestCase{
 
     /** @test */
     public function it_stores_new_chat_entry(): void{
+       $this->app->instance(ChatController::class, 
+            tap(new ChatController(), function($controller) {
+                $controller->setChatbotFile('chat_test.json');
+            })
+        );
+
         $newEntry = [
             'question' => 'Què és PHP?',
             'answer' => 'PHP es una llenguatge de programació web'
@@ -65,6 +75,12 @@ class ChatApiTest extends TestCase{
 
     /** @test */
     public function it_validates_required_fields(): void{
+        $this->app->instance(ChatController::class, 
+            tap(new ChatController(), function($controller) {
+                $controller->setChatbotFile('chat_test.json');
+            })
+        );
+
         $invalidData = ['question' => ''];
 
         $response = $this->postJson('/api/chat', $invalidData);
@@ -75,6 +91,13 @@ class ChatApiTest extends TestCase{
 
     /** @test  */
     public function it_creates_a_new_entry(): void{
+        // Configurar el controlador para usar archivo de test
+        $this->app->instance(\App\Http\Controllers\ChatController::class, 
+            tap(new \App\Http\Controllers\ChatController(), function($controller) {
+                $controller->setChatbotFile('chat_test.json');
+            })
+        );
+
         $newEntry = [
             'question' => 'Amb quin nom es coneix les dependències de PHP?',
             'answer' => 'Es coneix com a Composer'

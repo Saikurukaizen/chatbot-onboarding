@@ -12,6 +12,10 @@ class ChatController extends Controller{
 
     private string $chatbotFile = 'chat.json';
 
+    public function setChatbotFile(string $filename): void {
+        $this->chatbotFile = $filename;
+    }
+
     private function readChatbotFile(): array{
         try{
             $path = storage_path('app/' . $this->chatbotFile);
@@ -40,7 +44,6 @@ class ChatController extends Controller{
     }
     
     public function index(): JsonResponse{
-
         $chat = $this->readChatbotFile();
         return response()->json($chat);
     }
